@@ -1,0 +1,202 @@
+%---------------------------------------------------------------------------
+%  nach einer Vorlage von Guido de Melo,
+%  modifiziert für den Gebrauch im Kurs
+%  Wissenschaftliche Methodik und Latex
+%---------------------------------------------------------------------------
+
+%---------------------------------------------------------------------------
+%  Koma-Skript Optionen
+%---------------------------------------------------------------------------
+\documentclass[
+    final,      % draft (keine Graphiken, overful boxes anzeigen)
+    a4paper,    % alle Formate von a0paper bis a8paer
+    12pt,       % Hauptschrift,9pt,10pt,11pt,12pt, für andere package "extsizes"
+    titlepage,  % <-> notitlepage
+    portrait,   % <-> landscape
+    abstracton, % <-> abstractoff, mit \abstractname Bezeichnung festlegen
+    %twocolumn,
+    headings=normal, % small,normal,big
+    %open=right, %any,left 
+]{scrartcl} %scrartcl,scrbook,scrreprt,scrartcl,scrlttr2 
+
+%---------------------------------------------------------------------------
+%  Spracheinstellungen
+%---------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,ngerman]{babel}
+%Trennungsregeln über
+\hyphenation{Sil-ben-trenn-ung}
+
+%---------------------------------------------------------------------------
+%  Kopf- und Fußzeile
+%---------------------------------------------------------------------------
+
+% Gestaltung von Kopf- und Fußzeile über koma-Script
+\usepackage[automark]{scrpage2}
+	\ifoot[]{}   % [scrplain-Stil]{scrheadings-Stil}
+	\cfoot[\pagemark]{}   % hier sollen der Dokumentenkopf mittig
+	\ofoot[]{}   % in plain und headings leer sein
+	\ihead[]{}   % leere Argumente setzen alle eventuell gesetzten Werte zurück
+	\chead[]{\headmark}  % Kolumnen innen
+	\ohead[]{\pagemark}  % Seitenzahlen außen
+\pagestyle{scrheadings} % Aktivierung des gerade definierten Stils
+                        % wichtig ist noch scrplain für Seiten mit \chapter etc.
+
+%---------------------------------------------------------------------------
+%  Seitenlayout
+%---------------------------------------------------------------------------
+
+\usepackage{geometry}
+\geometry{%
+	a4paper,
+	top=3.5cm,
+	left=3.5cm,
+	right=4.5cm,
+	bottom=4.5cm,
+        %columnsep=1em,   % Abstände zwischen Spalten und Text
+        %footnotesep=,    % Fußnoten und Text
+        %marginparsep=,   % Marginalien und Text
+        %headsep=,        % Kopfzeile und Text
+        %footskip=,       % Fußzeile und Text
+        %showframe,       % zeigt den Seitenspiegel an
+	pdftex,           % Verwendung der PdfTex-Engine
+}
+%\usepackage{layout}     % zeigt das Layout mit allen Variabeln an über \layout
+
+%---------------------------------------------------------------------------
+%  Schriften
+%---------------------------------------------------------------------------
+\usepackage{mathptmx}
+\usepackage[scaled]{helvet}
+
+%\usepackage{textcomp}  % Ergänzende Zeichen, z. B. Euro und
+%\usepackage{pifont}    % Zapf-Dingbats, bietet die Kommandos \ding{'64}
+                        % oder \begin{dinglist}{'64}\ldots\end{dinglist}
+
+%\usepackage{shortvrb}  % \MakeShortVerb{\#} \DeleteShortVerb{\#}
+                        % vereinfachte verbatim-Umgebung, wichtig für viel
+                        % Quelltext
+
+%---------------------------------------------------------------------------
+%  Bibliographie
+%---------------------------------------------------------------------------
+
+%\usepackage[style=authoryear,  % Autor und Jahr, z. B. in Physik
+            %hyperref=true,true % verlinke Bibliographie
+            %firstinits=true,   % Vorname zu Initialen kürzen
+            %isbn=false,        % keine ISBN in Bibliographie übernehmen
+            %]{biblatex}
+%\bibliography{Bibfile}       % Gibt den Ort der Bibliographiedatei an
+%\usepackage[babel]{csquotes} % wird von Biblatex gern gesehen
+
+%---------------------------------------------------------------------------
+%  Graphiken
+%---------------------------------------------------------------------------
+
+\usepackage{graphicx}
+
+%---------------------------------------------------------------------------
+%  Tabellen
+%---------------------------------------------------------------------------
+
+\usepackage{booktabs}   % für schöne Tabellen
+%\usepackage{tabularx}  % für komplexe Tabellen
+
+%---------------------------------------------------------------------------
+%  Koma-Tuning
+%---------------------------------------------------------------------------
+
+%\setkomafont{%
+%	sectioning             % alle Gliederungsüberschriften
+%	caption
+%	captionlabel
+%	chapter
+%	descriptionlabel
+%	dictum
+%	dictumauthor
+%	dictumtext
+%	footnote
+%	footnotelabel
+%	footnotereference      % Referenzierung der Fußnotenmarke im Text
+%	minisec
+%	pagefoot               % Kopf und Fuß einer Seite
+%	pagehead               % Kopf und Fuß einer Seite
+%	pagenumber             % Seitenzahl im Kopf oder Fuß der Seite
+%	paragraph
+%	part
+%	partnumber             % Zeile mit der Nummer des Teils in Überschrift der Ebene \part
+%	section
+%	subparagraph
+%	subsection
+%	subsubsection
+%	title
+%}{% Hier der gewünschte Befehl,
+		%	\normalfont, \rmfamily, \sffamily, \ttfamily,
+		%	\mdseries, \bfseries, \upshape, \itshape, 
+		%	\slshape, \scshape sowie Größenbefehle 
+%		%	\Huge, \huge, \LARGE 
+%}
+
+%---------------------------------------------------------------------------
+%  Inhalt- und Gliederung
+%---------------------------------------------------------------------------
+
+\addtokomafont{sectioning}{\rmfamily}          % behält alle gesetzten Attribute 
+                                               % und verändert die Überschrift zu Serifen
+\setcounter{tocdepth}{3}          % Aufgliederung des Inhaltsverzeichnisses
+\setcounter{secnumdepth}{3}       % schaltet Nummering in Toc für alle Ebenen aus
+                                  % bestimmen den Detailgrad des
+                                  % Inhaltsverzeichnisses, drei Ebenen reichen
+
+%---------------------------------------------------------------------------
+%  Farben
+%---------------------------------------------------------------------------
+
+\usepackage[dvipsnames]{xcolor} % für sehr schöne Farben in Latex
+%\newcommand*{\defaultcolor}{\color{black}}         % stellt die Standardfarbe ein
+
+%---------------------------------------------------------------------------
+%  Seiten- und Absatzumbruch
+%---------------------------------------------------------------------------
+
+\clubpenalty10000   % keine Schusterjungen
+\widowpenalty10000  % keine Hurenkinder
+\parindent0pt   % kein Einzug
+\flushbottom    % erzwinge gleich volle Seiten
+
+%---------------------------------------------------------------------------
+%  Für wissenschaftliche Arbeiten
+%---------------------------------------------------------------------------
+
+\newcommand{\fullname}{Vorname Nachname}
+\newcommand{\email}{vorname.nachname@uni-ulm.de}
+\newcommand{\titel}{Titel der Arbeit}
+\newcommand{\jahr}{2009}
+\newcommand{\matnr}{123456}
+\newcommand{\gutachterA}{Prof.\ Dr.\ Streng Geheim}
+\newcommand{\gutachterB}{Prof.\ Dr.\ Un Leserlich}
+\newcommand{\betreuer}{Betreuername} % hier richtige Fakultät auswählen
+\newcommand{\fakultaet}{Ingenieurwissenschaften\\und Informatik}
+%\newcommand{\fakultaet}{Mathematik und\\Wirtschaftswissenschaften}
+%\newcommand{\fakultaet}{Naturwissenschaften}
+%\newcommand{\fakultaet}{Medizin}
+% nun noch unten das Institut einsetzen
+\newcommand{\institut}{Institut für Irgendetwas}
+
+\usepackage{setspace}   % \onehalfspacing, \singlespacing, \doublespacing
+
+%---------------------------------------------------------------------------
+%  Pdf-Setup
+%---------------------------------------------------------------------------
+
+\usepackage{microtype}      % Bereitstellun des Kommandos \textls[Amount]{} für Ad-hoc-Tracking 
+\usepackage[]{hyperref} 
+\hypersetup{
+pdftitle=\titel{},
+pdfauthor=\fullname{},
+pdfsubject={Abschlussarbeit},
+colorlinks=false,
+pdfborder=0 0 0	% keine Box um die Links!
+}
