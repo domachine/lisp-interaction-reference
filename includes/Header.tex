@@ -75,7 +75,9 @@
 %\usepackage{pifont}    % Zapf-Dingbats, bietet die Kommandos \ding{'64}
                         % oder \begin{dinglist}{'64}\ldots\end{dinglist}
 
-%\usepackage{shortvrb}  % \MakeShortVerb{\#} \DeleteShortVerb{\#}
+\usepackage{shortvrb}  
+\MakeShortVerb{\!}
+%\DeleteShortVerb{\!}
                         % vereinfachte verbatim-Umgebung, wichtig für viel
                         % Quelltext
 
@@ -102,6 +104,7 @@
 %---------------------------------------------------------------------------
 
 \usepackage{booktabs}   % für schöne Tabellen
+\usepackage{threeparttable}
 %\usepackage{tabularx}  % für komplexe Tabellen
 
 %---------------------------------------------------------------------------
@@ -157,6 +160,18 @@
 \usepackage[dvipsnames]{xcolor} % für sehr schöne Farben in Latex
 %\newcommand*{\defaultcolor}{\color{black}}         % stellt die Standardfarbe ein
 
+\usepackage{listings}
+\lstset{
+	basicstyle=\small,
+%	commentstyle=\color{grey},
+%	keywordstyle=\textcolor{},
+	stringstyle=\ttfamily,
+%	showstringspace=true,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=5pt,
+	language=C++}
+
 %---------------------------------------------------------------------------
 %  Seiten- und Absatzumbruch
 %---------------------------------------------------------------------------
@@ -184,6 +199,7 @@
 %\newcommand{\fakultaet}{Medizin}
 % nun noch unten das Institut einsetzen
 \newcommand{\institut}{Institut für Irgendetwas}
+\newcommand{\projectname}{\emph{Lisp-Interaction}}
 
 \usepackage{setspace}   % \onehalfspacing, \singlespacing, \doublespacing
 

@@ -1,3 +1,93 @@
 \section{Zahlenrepräsentation}
+\label{sec:numbers}
 
-Text folgt.
+Die Zahlenrepräsentation von \projectname{} folgt eng derer anderer Lispimplementierungen. Intern kennt \projectname{} drei verschiedene Zahlentypen: !long long!, !double! und !fraction!. Diese werden dynmisch unter Erhalt größtmöglicher Genauigkeit umgewandelt. Tabelle \ref{tab:typeconversion} zeigt den Ergebnistypen einer arithmetischen Operation in abhängigkeit der Operandentypen.
+\begin{table}[htbp]
+	\centering
+	\begin{threeparttable}
+		\captionabove{Rückgabetyp arithmetischer Operatoren nach Operandentyp}
+		\begin{tabular*}{0.6\linewidth}{l|lll}
+					&long	&double	&fraction\\
+			\hline
+			long		&long	&double	&fraction\\
+			double	&double	&double	&double\\
+			fraction	&fraction&double	&fraction\tnote{*}\\
+		\end{tabular*}
+		\begin{tablenotes}
+			\item{*}long falls das Ergebnis ganzzahlig ist
+		\end{tablenotes}
+		\label{tab:typeconversion}
+	\end{threeparttable}
+\end{table}
+Intern werden Zahlen dazu durch die Klasse !number!\footnote{deklariert in number.hpp} verwaltet, die auf der Klasse AnyScalar von Timo Bingmann basiert. Alle Datentypen werden in einer !union! verwaltet, der aktuelle Typ wird durch einen Enumerator gespeichert. Die !number! Klasse übernimmt alle nötigen Typkonvertierungen sowie boolsche und arithmetische Operatoren durch zwei Templates. Der konkrete Operator wird dabei als Templateparameter übergeben. Die !C++!-Standardbibliothek bietet dazu die Klassen !std::plus!, !std::minus!, !std::multiplies! und !std::divides!. Bei Fehlern wie der Division durch $0$ wird eine !arith_error!-Exception\footnote{deklariert in arith\_error.hpp} geworfen. Listing \ref{lst:op_template} zeigt die Implementierung der arithmetischen Operatoren in verkürzter Form als Beispiel.
+\begin{lstlisting}[caption={Arithmetische Operatoren}, label=lst:op_template]
+template <template <typename Type> class Operator,
+                                   char OpName>
+number number::binary_arith_op(const number &b) const
+{
+    switch(atype)
+    {
+    case ATTRTYPE_LONG:
+    {
+        switch(b.atype)
+        {
+        case ATTRTYPE_LONG:
+        {
+            Operator<long long> op;
+            if (OpName == '/') {
+                if(b.val._long == 0)
+                    throw arith_error("division by zero");
+                if(val._long%b.val._long != 0) {
+                    number b2(b);
+                    b2.convert_type(ATTRTYPE_FRACTION);
+                    number a2(*this);
+                    a2.convert_type(ATTRTYPE_FRACTION);
+                    Operator<fraction> op2;
+                    return number(op2(a2.val._fraction,
+                                      b2.val._fraction));
+                }
+            }
+            return number( op(val._long, b.val._long) );
+        }
+        case ATTRTYPE_DOUBLE:
+        {
+            Operator<double> op;
+            return number( op(static_cast<double>(val._long),
+                           b.val._double) )
+        }
+
+        case ATTRTYPE_FRACTION:
+        {
+            Operator<fraction> op;
+            if (OpName == '/' && b.val._long == 0)
+                throw arith_error("division by zero");
+            number a(*this);
+            a.convert_type(ATTRTYPE_FRACTION);
+            return number(op(a.val._fraction,
+                             b.val._fraction));
+        }
+        }
+        break;
+    }
+
+    //the same for atype == ATTRTYPE_DOUBLE
+    //         and atype == ATTRTYPE_FRACTION
+
+    }
+    assert(0);
+}
+
+// Force instantiation of binary_op for the
+// four arithmetic operators
+
+/// Forced instantiation of binary_arith_op
+//  for number::operator+()
+
+template number number::binary_arith_op<std::plus, '+'>
+    (const number &b) const;
+\end{lstlisting}
+Die Klasse !number! ist von !object! abgeleitet und überschreibt die Methode !is_number()!, sodass sich die Typen übergebener Parameter überprüfen lassen. Beispiele zur Verwendung der !number! Klasse und Implementierung der arithmetischen Funktionen finden sich in Abschnitt \ref{sec:cxx_interface}.
+
+Der !typedef! !number_ptr_t! ist eine Spezialisierung von !boost::shared_ptr! und dient der einfacheren Verwendung der !number! Klasse als Funktionsparameter. Näheres zu !boost::shared_ptr! im Abschnitt \ref{sec:shared_ptr}.
+
+Der Tokenizer erkennt Zahlen als Ganzzahl, Fließkommazahl und Bruch und erzeugt Objekte entsprechenden Typs. Details dazu in Abschnitt \ref{sec:tokenizer}.
