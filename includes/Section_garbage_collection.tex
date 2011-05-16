@@ -1,0 +1,22 @@
+\section{Die Garbage Collection}
+
+Garbage Collection ist ein, im Zusammenhang mit dynamischen Sprachen, weit verbreiteter Begriff, der
+einen Mechanismus bezeichnet welcher für die Freigabe alloziierter Ressourcen im laufenden Programm, zuständig
+ist.
+
+In \projectname wird diese mit Hilfe der, von Boost bereitgestellten, !shared_ptr! Klasse umgesetzt.
+Die Hauptimplementierung liegt hier in der Klasse !lisp::environment!, die eine Hashtable mit allen
+im Programm verwendeten Symbolen hält. Symbole können auch nur über diese Klasse alloziiert werden. Der
+Konstruktor der !symbol! Klasse wurde zu diesem Zweck als !private! deklariert.
+Wenn nun ein Symbol über die !lisp::environment! Klasse angefordert wird, so alloziiert diese
+Speicher für solch ein Symbol, speichert einen Zeiger darauf in der verwalteten Hashtable
+und umschließt sie letztendlich mit einem !shared_ptr! um diesen dann an den Aufruf zurückzugeben.
+
+Der Vorteil der genannten !shared_ptr! besteht nun darin, dass diese einen Referenzzähler unterhalten,
+der die Anzahl an Kopien, dieses Zeiger, im Speicher zählt. Erreicht dieser Zähler den Wert 0, so
+wird die !lisp::environment! Klasse daüber informiert. Selbige wägt dann ab ob das Symbol weiterhin benötigt
+wird. Falls nicht wird es aus der gehaltenen Hashtable gelöscht.
+
+Dieses Vorgehen unterscheidet sich grundlegend zu der Implementierung !common-lisp!. Während \projectname
+dadurch eine dynamische Bindung einsetzt, hält sich !common-lisp! streng an eine syntaktische Bindung.
+Die dynamische Bindung kommt hier eher der !Emacs-Lisp!-Implementierung nahe, die diese ebenfalls verfolgt.
