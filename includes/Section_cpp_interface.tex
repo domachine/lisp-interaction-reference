@@ -1,3 +1,68 @@
 \section{Das C++ Interface}
+\label{sec:cxx_interface}
 
-Text folgt.
+\projectname{} ermöglicht eine sehr einfache Integration des Lisp-Interpreters in bestehende C++-Projekte. Sowohl Objekte als auch Funktionen können sehr einfach der Lisp-Seite bekannt gemacht werden.
+
+\subsection{C++ Funktionen an \projectname{} übergeben}
+\label{sec:cxx_function_interface}
+
+Jede Funktion, die an \projectname{} übergeben werden soll muss als Methode einer von !object! abgeleiteten Klasse realisiert werden. Zur einfacheren Implementierung eigener Funktionen existiert jedoch auch die Klasse !cxx_function!. Diese übernimmt das Evaluieren und die Umwandlung der Parameterliste in einen !vector!. Konkret bedeutet dies, dass jede übergebene Funktion den !operator()! einer von !cxx_function! abgeleiteten Klasse überschreibt und dann eine Instanz dieser Klasse an \projectname{} übergeben wird. Als Beispiel dienen in Listing \ref{lst:cxx_function} die arithmetischen Operatoren.
+\begin{lstlisting}[caption={Arithmetische Operatoren an Lisp übergeben}, label=lst:cxx_function]
+template <template <typename Type> class Operator,
+          char OpName>
+class arith_op_form : public cxx_function
+{
+    object_ptr_t operator()(environment* env,
+                            const argv_t& args)
+        {
+            size_t sz = args.size();
+            if(sz <= 1)
+                signal(env->get_symbol(
+                           "wrong-number-of-arguments"),
+                       to_string(OpName));
+            if(!args[0]->is_number())
+                signal(env->get_symbol(
+                           "wrong-type-argument"),
+                       to_string(OpName) + ": numberp "
+                                         + args[0]->str());
+
+            number_ptr_t res = 
+                boost::dynamic_pointer_cast<lisp::number>(
+                args[0]);
+
+            for(unsigned int i = 1; i < sz; i++)
+            {
+                if(args[i]->is_number())
+                {
+                    number_ptr_t num =
+                        boost::dynamic_pointer_cast
+                            <lisp::number>(args[i]);
+                    Operator<number> op;
+
+                    *res = op(*res, *num);
+                }
+                else
+                    signal(env->get_symbol(
+                               "wrong-type-argument"),
+                           to_string(OpName) + ": numberp "
+                                         + args[i]->str());
+            }
+
+            return res;
+        }
+};
+
+//in lisp.cpp: lisp::*global_env()
+
+_global_env.get_symbol("+")->set_function(
+    object_ptr_t(new arith_op_form<std::plus, '+'>()));
+_global_env.get_symbol("-")->set_function(
+    object_ptr_t(new arith_op_form<std::minus, '-'>()));
+_global_env.get_symbol("*")->set_function(
+    object_ptr_t(new arith_op_form<std::multiplies, '*'>()));
+_global_env.get_symbol("/")->set_function(
+    object_ptr_t(new arith_op_form<std::divides, '/'>()));
+\end{lstlisting}
+
+\subsection{C++ Objekte an \projectname{} übergeben}
+\label{sec:cxx_object_interface}
