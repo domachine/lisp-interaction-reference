@@ -86,7 +86,7 @@ number number::binary_arith_op(const number &b) const
 template number number::binary_arith_op<std::plus, '+'>
     (const number &b) const;
 \end{lstlisting}
-Die Klasse !number! ist von !object! abgeleitet und überschreibt die Methode !is_number()!, sodass sich die Typen übergebener Parameter überprüfen lassen. Beispiele zur Verwendung der !number! Klasse und Implementierung der arithmetischen Funktionen finden sich in Abschnitt \ref{sec:cxx_interface}.
+Die Klasse !number! ist von !object! abgeleitet und überschreibt die Methode !is_number()!, sodass sich die Typen übergebener Parameter überprüfen lassen. Beispiele zur Verwendung der !number! Klasse und Implementierung der arithmetischen Funktionen finden sich in Abschnitt \ref{sec:cxx_function_interface}.
 
 Der !typedef! !number_ptr_t! ist eine Spezialisierung von !boost::shared_ptr! und dient der einfacheren Verwendung der !number! Klasse als Funktionsparameter. Näheres zu !boost::shared_ptr! im Abschnitt \ref{sec:shared_ptr}.
 
