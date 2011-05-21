@@ -1,0 +1,18 @@
+\section{Environment}
+\label{sec:cxx_interface}
+
+Die !lisp::environment! Klasse ist eines Herzstücke von \projectname{}.
+Sie stellt eine Umgebung zur Verfügung, die von lisp-typischen Formen wie !let! und !lambda!
+eingeleitet wird. Sie hält eine sogenannte Hashtable mit allen an diese Umgebung gebundenen
+Symbolen und überwacht ihre Lebenszeit (siehe \ref{sec:shared_ptr}).
+
+\projectname{} wurde entworfen um eine einfache Schnittstelle zwischen einem C++-Programm
+und lisp-programmen zu schaffen. Aus diesem Grund hält \projectname{} durchgehend
+eine sogenannte globale Umgebung. Diese Umgebung ist eine Instanz der hier genannten 
+!environment! Klasse. Das Client-C++-Programm sollte alle geladenen lisp-programme
+über diese globale Umgebung ausgeführen. Damit wird eine bequeme Weitergabe von Objekten
+und Funktionen an die Lisp-Seite ermöglicht in dem diese von jeder Stelle aus an Symbole
+aus der globalen Umgebung gebunden werden können.
+
+Im aktuellen Entwicklungsstand werden auch die durch den Kern implementierten
+Formen auf diesem Weg ausgeliefert (siehe \ref{sec:cxx_interface}).
