@@ -6,7 +6,7 @@
 \subsection{C++ Funktionen an \projectname{} übergeben}
 \label{sec:cxx_function_interface}
 
-Jede Funktion, die an \projectname{} übergeben werden soll muss als Methode einer von !object! abgeleiteten Klasse realisiert werden. Zur einfacheren Implementierung eigener Funktionen existiert jedoch auch die Klasse !cxx_function!. Diese übernimmt das Evaluieren und die Umwandlung der Parameterliste in einen !vector!. Konkret bedeutet dies, dass jede übergebene Funktion den !operator()! einer von !cxx_function! abgeleiteten Klasse überschreibt und dann eine Instanz dieser Klasse an \projectname{} übergeben wird. Als Beispiel dienen in Listing \ref{lst:cxx_function} die arithmetischen Operatoren.
+Jede Funktion, die an \projectname{} übergeben werden soll muss als Methode einer von !object! abgeleiteten Klasse realisiert werden. Der !operator()! wird dabei überschrieben; als Argumente bekommt die Methode eine Referenz auf die aktuelle Umgebung\footnote{Näheres in Abschnitt \ref{sec:environment}.} sowie eine Liste übergebener Parameter. Diese sind noch nicht evaluiert, um beispielsweise die Implementierung einer if-Funktion zu ermöglichen. Die Liste selber ist Lisptypisch eine Verkettung von !cons_cell!s. Zur einfacheren Handhabung in eigenen Funktionen existiert jedoch auch die Klasse !cxx_function!. Diese übernimmt das Evaluieren und die Umwandlung der Parameterliste in einen !vector!. Nur die Anzahl und der Typ der Parameter muss noch überprüft werden. Konkret bedeutet dies, dass jede übergebene Funktion den !operator()! einer von !cxx_function! abgeleiteten Klasse überschreibt und dann eine Instanz dieser Klasse an \projectname{} übergeben wird. Zur Typprüfung der Parameter existiert für Zahlen die Methode !is_number!; andere Typen, beispielsweise von C++ Seite übergebene, müssen mithilfe der RTTI überprüft werden. Als Beispiel dienen in Listing \ref{lst:cxx_function} die arithmetischen Operatoren.
 \begin{lstlisting}[caption={Arithmetische Operatoren an Lisp übergeben}, label=lst:cxx_function]
 template <template <typename Type> class Operator,
           char OpName>
@@ -66,3 +66,5 @@ _global_env.get_symbol("/")->set_function(
 
 \subsection{C++ Objekte an \projectname{} übergeben}
 \label{sec:cxx_object_interface}
+
+C++ Objekte können auf ebenso einfache Weise an die Lispseite übergeben werden, wie Funktionen. Die entsprechenden Klassen müssen nur von !object! abgeleitet werden. Erzeugt werden können die Objekte in übergebenen Funktionen um als Rückgabewert auf Lispseite weiterverwendet zu werden. Die zerstörung der Objekte übernimmt der Garbage-Collector\footnote{Siehe Abschnitt \ref{sec:shared_ptr}.}. Werden eigene Objekte an Lispfunktionen übergeben, findet wie bereits erwähnt keine automatische Typprüfung statt. Der Typ eines Objekts kann jedoch jeweils mittels des !type_id! Operators bestimmt werden.
