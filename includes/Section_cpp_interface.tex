@@ -67,4 +67,5 @@ _global_env.get_symbol("/")->set_function(
 \subsection{C++ Objekte an \projectname{} übergeben}
 \label{sec:cxx_object_interface}
 
-C++ Objekte können auf ebenso einfache Weise an die Lispseite übergeben werden, wie Funktionen. Die entsprechenden Klassen müssen nur von !object! abgeleitet werden. Erzeugt werden können die Objekte in übergebenen Funktionen um als Rückgabewert auf Lispseite weiterverwendet zu werden. Die zerstörung der Objekte übernimmt der Garbage-Collector\footnote{Siehe Abschnitt \ref{sec:shared_ptr}.}. Werden eigene Objekte an Lispfunktionen übergeben, findet wie bereits erwähnt keine automatische Typprüfung statt. Der Typ eines Objekts kann jedoch jeweils mittels des !type_id! Operators bestimmt werden.
+C++ Objekte können auf ebenso einfache Weise an die Lispseite übergeben werden, wie Funktionen. Die entsprechenden Klassen müssen nur von !object! abgeleitet werden. Erzeugt werden können die Objekte in übergebenen Funktionen um als Rückgabewert auf Lispseite weiterverwendet zu werden. Die zerstörung der Objekte übernimmt der Garbage-Collector\footnote{Siehe Abschnitt \ref{sec:shared_ptr}.}. Werden eigene Objekte an Lispfunktionen übergeben, findet wie bereits erwähnt keine automatische Typprüfung statt. Der Typ eines Objekts kann jedoch jeweils mittels des !typeid! Operators bestimmt werden.
+%Hier noch ein Beispiel oder so?!
