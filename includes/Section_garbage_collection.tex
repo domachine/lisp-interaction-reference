@@ -17,7 +17,7 @@ Der Konstruktor der !symbol! Klasse wurde zu diesem Zweck als !private! deklarie
 Wenn nun ein Symbol über die !lisp::environment! Klasse angefordert wird,
 so alloziiert diese Speicher für solch ein Symbol,
 speichert einen Zeiger darauf in der verwalteten Hashtable
-und umschließt sie letztendlich mit einem !shared_ptr!
+und umschließt es letztendlich mit einem !shared_ptr!
 um diesen dann an den Aufrufer zurückzugeben.
 
 Der Vorteil der genannten !shared_ptr! besteht nun darin,
