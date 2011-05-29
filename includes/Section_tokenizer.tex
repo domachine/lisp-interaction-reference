@@ -1,4 +1,24 @@
-\section{Der Tokenizer}
+\section{Skriptverarbeitung}
+%mir fällt beim besten willen kein gescheiter Titel ein
+%vielleicht Ausführungsschritte?
+%oder Laufzeit[irgendwas]?
+
+\subsection{Der Tokenizer}
 \label{sec:tokenizer}
 
 %weiß nicht, ob diese Section notwendig ist, aber das Label wird referenziert…
+%hab eigentlich keine Ahnung von der Materie, also nimm mir Ungenauigkeiten/Fehler nicht übel
+%das ganze ist bisher auch eher Alibimäßig, muss also entweder erweitert oder gelöscht werden.
+Der Tokenizer dient der lexikalischen Analyse und zerlegt den Eingabestrom in einzelne Tokens, also logisch zusammenhängende Einheiten. In \projectname{} sind das:
+%Nicht nötig, aber perfekt um gelerntes zu präsentieren…
+\begin{itemize}
+\item{Klammern}
+\item{Strings}
+\item{Symbole}
+\item{Konstanten}
+\end{itemize}
+%als Beispiel vielleicht der reguläre Ausdruck um Zahlen von Symbolen zu unterscheiden
+Der Tokenizer überprüft dabei nur die syntaktische Korrektheit, die semantische Analyse beziehungsweise die Interpretation führt der nachgeschaltete Interpreter aus.
+
+%hier vielleicht noch was zum Interpreter…
+\subsection{Der Interpreter}
