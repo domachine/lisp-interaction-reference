@@ -14,7 +14,22 @@ Das Projekt, sowie die jeweils aktuellste Version dieser Referenz stehen auf git
 \subsection{Allgemeiner Aufbau}
 
 
-\projectname{} implementiert keinen festen Lispdialekt. Die Zahlenrepräsentation ist mit ausnahme komplexer Zahlen an Common Lisp angelehnt (\cite[S. 143ff]{graham_ansi_1995}, Abschnitt \ref{sec:numbers}), setzt aber im Gegensatz dazu , wie einige ältere Lispimplementierungen oder Emacs, dynamische Bindung ein, sucht also globale Variablen in der zum Aufrufzeitpunkt umgebenden Umgebung anstatt in der zum Deklarationszaitpunkt umgebenden (\cite[36, 63]{wilhelm_uebersetzerbau_2007}\cite[112]{graham_ansi_1995}).
+\projectname{} implementiert keinen festen Lispdialekt. Die Zahlenrepräsentation ist mit ausnahme komplexer Zahlen an Common Lisp angelehnt (\cite[S. 143ff]{graham_ansi_1995}, Abschnitt \ref{sec:numbers}), setzt aber im Gegensatz dazu , wie einige ältere Lispimplementierungen oder Emacs, dynamische Bindung ein, sucht also globale Variablen in der zum Aufrufzeitpunkt umgebenden Umgebung anstatt in der zum Deklarationszaitpunkt umgebenden (\cite[36, 63]{wilhelm_uebersetzerbau_2007}\cite[112]{graham_ansi_1995}). Listing \ref{lst:bindung} veranschaulicht dynamische und statische Bindung anhand eines Beispiels.
+%habs jetzt einfach mal hier kurz reingeschrieben, vielleicht passts ja woanders besser.
+
+\begin{lstlisting}[caption={dynamische Bindung}, label=lst:bindung, language=Lisp]
+(defun test (x)
+    (defun printx ()
+        (print x))) ;princ in Common Lisp
+(test "statisch")
+;Bei statischer Bindung wird das x zum Deklarationszeitpunkt gebunden, also "statisch"
+
+(defun test2 (x)
+    (printx))
+(test2 "dynamisch")
+;Dynamische Bindung verwendet das x zum Aufrufzeitpunkt, also "dynamisch"
+\end{lstlisting}
+
 %Klassendiagramm?
 %Grobe Ausführungsschritte
 %Verteilung der Komponenten auf Quelldateien
