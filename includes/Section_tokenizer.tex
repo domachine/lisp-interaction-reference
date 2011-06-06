@@ -6,19 +6,202 @@
 \subsection{Der Tokenizer}
 \label{sec:tokenizer}
 
-%weiß nicht, ob diese Section notwendig ist, aber das Label wird referenziert…
-%hab eigentlich keine Ahnung von der Materie, also nimm mir Ungenauigkeiten/Fehler nicht übel
-%das ganze ist bisher auch eher Alibimäßig, muss also entweder erweitert oder gelöscht werden.
-Der Tokenizer dient der lexikalischen Analyse und zerlegt den Eingabestrom in einzelne Tokens, also logisch zusammenhängende Einheiten. In \projectname{} sind das:
+Ein wichtiger zur Übersetzung von, durch Menschenhand geschriebenen, Quellcode
+in maschinenverarbeitbare Speicherobjekte, ist der Tokenizer. Er sorgt für die
+syntaktische Analyse von Quellcode.
+
+Dazu wird ein Eingabestrom gelesen und sequentiell abgearbeitet und überprüft
+um diese als syntaktische Elemente der Sprache zu erfassen. Tritt dabei ein
+unbekanntes oder in einem syntaktischen Zusammenhang unpassendes Zeichen
+auf, wird der Einlesevorgang sofort gestoppt und mit einem Fehler beendet.
+
+Die syntaktischen Elemente des Lisp-Dialekts, den Lisp-Interaction erkennt,
+sind folgende:
+
 %Nicht nötig, aber perfekt um gelerntes zu präsentieren…
 \begin{itemize}
 \item{Klammern}
 \item{Strings}
+\item{Zahlen}
 \item{Symbole}
 \item{Konstanten}
 \end{itemize}
-%als Beispiel vielleicht der reguläre Ausdruck um Zahlen von Symbolen zu unterscheiden
-Der Tokenizer überprüft dabei nur die syntaktische Korrektheit, die semantische Analyse beziehungsweise die Interpretation führt der nachgeschaltete Interpreter aus.
+
+Wie oben beschrieben \emph{erkennt} der Tokenizer diese Elemente lediglich,
+kann deren semantische Aussagekraft nicht verarbeiten.
+Für diese Aufgabe ist der Interpreter. Tatsächlich ist der Tokenizer nämlich
+lediglich ein \emph{Werkzeug}, das vom Interpreter aufgerufen wird und somit
+die Eingabemethode abstrahiert.
+
+\begin{lstlisting}[caption={Tokenizer}, label=lst:tokenizer]
+
+    enum token {
+        END,
+        LEFT_PARENTHESIS,
+        RIGHT_PARENTHESIS,
+        STRING,
+        SYMBOL,
+        NUMBER,
+        DOT,
+        QUOTE
+    };
+
+    /**
+       Parses an input stream using an iterator and cuts it into
+       tokens which can be consumed and processed by the interpreter
+       or compiler.
+    */
+    template <class T>
+    class tokenizer
+    {
+    public:
+        tokenizer(T& iterator, const T& end = T())
+            : m_iterator(iterator),
+              m_end(end),
+              m_line(1),
+              m_current_token(END)
+            {
+            }
+
+        token next_token()
+            {
+                m_cache.clear();
+
+                if(m_iterator == m_end)
+                    return END;
+
+                char last = '\0';
+
+                for(; m_iterator != m_end; ++m_iterator) {
+                    switch(*m_iterator) {
+                    case '(':
+                        m_cache += *m_iterator;
+                        ++m_iterator;
+                        return (m_current_token = LEFT_PARENTHESIS);
+                    case ')':
+                        m_cache += *m_iterator;
+                        ++m_iterator;
+                        return (m_current_token = RIGHT_PARENTHESIS);
+                    case '"':
+                        parse_string();
+                        return (m_current_token = STRING);
+                    case '.':
+                        m_cache += *m_iterator;
+                        ++m_iterator;
+                        return (m_current_token = DOT);
+                    case '\'':
+                        m_cache += *m_iterator;
+                        ++m_iterator;
+                        return (m_current_token = QUOTE);
+                    case '\n':
+                        ++m_line;
+                    case ' ':
+                    case '\t':
+                        last = *m_iterator;
+                        break;
+		    case ';':
+			for(; m_iterator != m_end && *m_iterator != '\n'; ++m_iterator) {
+			    // Yeah, I know I could have put it in the loop-head ...
+			    if(*m_iterator == '\n')
+				break;
+			}
+
+			break;
+                    default:
+                        return parse_symbol_or_number();
+                    }
+                }
+
+                if(m_iterator == m_end &&
+                   (last == ' ' ||
+                   last == '\t' ||
+                   last == '\n'))
+                    return END;
+
+                error("unexpected end of file");
+
+                assert(false);
+            }
+}
+
+#endif  // LISP_TOKENIZER_HPP
+
+\end{lstlisting}
 
 %hier vielleicht noch was zum Interpreter…
 \subsection{Der Interpreter}
+
+Der Interpreter ist der Baustein, der quasi den Tokenizer umschließt.
+Er ist für die semantische Analyse des Quellcodes und die Verarbeitung in
+leicht handhabbare Speicherobjekte zuständig. Dazu wird der Tokenizer so oft
+aufgerufen, bis ein semantisches Element komplett erkannt wurde.
+
+Ein semantisches Element kann eines der folgenden Elemente sein:
+
+\begin{itemize}
+\item{Zahl}
+\item{Bruch (Wird anders als Zahlen gehandhabt um die Genauigkeit zu behalten.)}
+\item{String}
+\item{Liste}
+\end{itemize}
+
+Wie die einzelnen weiterverarbeitet werden, wird durch den Nutzer gesteuert.
+Es werden aber bereits Lisp-typische Verarbeitungsmethoden angeboten.
+Zum Beispiel die Verarbeitung einer Liste als Funktionsaufruf.
+
+\begin{lstlisting}[caption={Interpreter}, label=lst:interpreter]
+
+        template <typename T>
+        object_ptr_t compile_expr(environment* env, tokenizer<T>& tok)
+        {
+            token lisp_token = tok.current_token();
+	    // logging::log(logging::DEBUG) << tok.value() << std::endl;
+
+            switch(lisp_token) {
+            case LEFT_PARENTHESIS:
+                return compile_list(env, tok);
+            case SYMBOL:
+                if(tok.value() == "nil")
+                    return nil();
+                else if(tok.value() == "t")
+                    return t();
+
+                return object_ptr_t(new symbol_ref(tok.value()));
+            case STRING:
+                return object_ptr_t(new string(tok.value()));
+            case NUMBER:
+            {
+                if(tok.value().find('.') != std::string::npos) {
+                    double dnum = from_string<double>(tok.value());
+
+                    number_ptr_t num = number_ptr_t(new number(dnum));
+
+                    return num;
+                }
+                else if(tok.value().find('/') != std::string::npos) {
+                    size_t pos = tok.value().find('/');
+                    int nominator = from_string<int>(tok.value().substr(0, pos));
+                    int denominator = from_string<int>(tok.value().substr(pos+1, std::string::npos));
+
+                    number_ptr_t num = number_ptr_t(new number(nominator, denominator));
+
+                    return num;
+                }
+                else {
+                    long long lnum = from_string<long long>(tok.value());
+
+                    number_ptr_t num = number_ptr_t(new number(lnum));
+
+                    return num;
+                }
+            }
+            case QUOTE:
+                tok.next_token();
+                return object_ptr_t(new quote(compile_expr(env, tok)));
+            default:
+                throw parse_error("unexpected token: " + tok.value(),
+                                  tok.line());
+            }
+        }
+
+\end{lstlisting}
