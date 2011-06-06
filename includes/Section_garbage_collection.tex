@@ -27,6 +27,15 @@ Erreicht dieser Zähler den Wert 0, so
 wird die !lisp::environment! Klasse daüber informiert.
 Selbige wägt dann ab ob das Symbol weiterhin benötigt
 wird. Falls nicht wird es aus der gehaltenen Hashtable gelöscht.
+Abbildung \ref{fig:garbage} veranschaulicht das Vorgehen.
+
+%ich hoffe, das Bild stimmt einigermaßen…
+\begin{figure}[htbp]
+\centering
+\captionabove{Speicherverwaltung}
+\includegraphics[width=0.8\textwidth]{images/garbage.pdf}
+\label{fig:garbage}
+\end{figure}
 
 Hier ein Einzug aus der !lisp::environment! Klasse, der aufgerufen wird, wenn
 ein Objekt ohne Referenzen im Speicher lebt:
