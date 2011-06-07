@@ -12,7 +12,7 @@ Da sich \projectname{} aktuell noch in Entwicklung befindet bezieht sich --- wen
 Das Projekt, sowie die jeweils aktuellste Version dieser Referenz stehen auf github.com zum Download bereit (\cite{lisp_interaction_online}\cite{lisp_interaction_ref_online}). %Link/Quelle?!
 
 \subsection{Allgemeiner Aufbau}
-
+\label{sec:environment}
 
 \projectname{} implementiert keinen festen Lispdialekt. Die Zahlenrepräsentation ist mit Ausnahme komplexer Zahlen an Common Lisp angelehnt (\cite[S. 143ff]{graham_ansi_1995}, Abschnitt \ref{sec:numbers}), setzt aber im Gegensatz dazu, wie einige ältere Lispimplementierungen oder Emacs, dynamische Bindung ein, sucht also globale Variablen in der zum Aufrufzeitpunkt umgebenden Umgebung anstatt in der zum Deklarationszaitpunkt umgebenden (\cite[36, 63]{wilhelm_uebersetzerbau_2007}\cite[112]{graham_ansi_1995}). Listing \ref{lst:bindung} veranschaulicht dynamische und statische Bindung anhand eines Beispiels.
 %habs jetzt einfach mal hier kurz reingeschrieben, vielleicht passts ja woanders besser.
@@ -31,6 +31,24 @@ Das Projekt, sowie die jeweils aktuellste Version dieser Referenz stehen auf git
 \end{lstlisting}
 
 Die Parameterübergabe erfolgt per Value, alle Parameter einer Funktion werden also vor Ausführung der Funktion evaluiert, egal ob sie im Funktionsrumpf verwendet werden oder nicht. Lazy Evaluation, d.h. die verzögerte Auswertung von Argumenten nach Bedarf (\cite[64]{wilhelm_uebersetzerbau_2007}), wie in Haskell oder Scheme wird gegenwärtig nicht von \projectname{} unterstützt.
+
+\subsubsection*{Environment}
+
+Die !lisp::environment! Klasse ist eines Herzstücke von \projectname{}.
+Sie stellt eine Umgebung zur Verfügung, die von lisp-typischen Formen wie !let! und !lambda!
+eingeleitet wird. Sie hält eine sogenannte Hashtable mit allen an diese Umgebung gebundenen
+Symbolen und überwacht ihre Lebenszeit (siehe \ref{sec:shared_ptr}).
+
+\projectname{} wurde entworfen um eine einfache Schnittstelle zwischen einem C++-Programm
+und lisp-programmen zu schaffen. Aus diesem Grund hält \projectname{} durchgehend
+eine sogenannte globale Umgebung. Diese Umgebung ist eine Instanz der hier genannten 
+!environment! Klasse. Das Client-C++-Programm sollte alle geladenen lisp-programme
+über diese globale Umgebung ausgeführen. Damit wird eine bequeme Weitergabe von Objekten
+und Funktionen an die Lisp-Seite ermöglicht in dem diese von jeder Stelle aus an Symbole
+aus der globalen Umgebung gebunden werden können.
+
+Im aktuellen Entwicklungsstand werden auch die durch den Kern implementierten
+Formen auf diesem Weg ausgeliefert (siehe \ref{sec:cxx_interface}).
 
 %Klassendiagramm?
 %Grobe Ausführungsschritte
