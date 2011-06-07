@@ -6,16 +6,18 @@
 \subsection{Der Tokenizer}
 \label{sec:tokenizer}
 
-Ein wichtiger zur Übersetzung von, durch Menschenhand geschriebenen, Quellcode
+Ein wichtiger Bestandteil, zur Übersetzung von,
+durch Menschenhand geschriebenen, Quellcode
 in maschinenverarbeitbare Speicherobjekte, ist der Tokenizer. Er sorgt für die
 syntaktische Analyse von Quellcode.
 
-Dazu wird ein Eingabestrom gelesen und sequentiell abgearbeitet und überprüft
-um diese als syntaktische Elemente der Sprache zu erfassen. Tritt dabei ein
+Dazu wird ein Eingabestrom gelesen, sequentiell abgearbeitet und überprüft,
+um die gelesenen Daten als syntaktische Elemente der Sprache zu erfassen.
+Tritt dabei ein
 unbekanntes oder in einem syntaktischen Zusammenhang unpassendes Zeichen
 auf, wird der Einlesevorgang sofort gestoppt und mit einem Fehler beendet.
 
-Die syntaktischen Elemente des Lisp-Dialekts, den Lisp-Interaction erkennt,
+Die syntaktischen Elemente des Lispdialekts, den \projectname{} erkennt,
 sind folgende:
 
 %Nicht nötig, aber perfekt um gelerntes zu präsentieren…
@@ -28,8 +30,9 @@ sind folgende:
 \end{itemize}
 
 Wie oben beschrieben \emph{erkennt} der Tokenizer diese Elemente lediglich,
-kann deren semantische Aussagekraft nicht verarbeiten.
-Für diese Aufgabe ist der Interpreter. Tatsächlich ist der Tokenizer nämlich
+kann deren Semantik nicht verarbeiten.
+Für diese Aufgabe ist der Interpreter zuständig:
+Tatsächlich ist der Tokenizer nämlich
 lediglich ein \emph{Werkzeug}, das vom Interpreter aufgerufen wird und somit
 die Eingabemethode abstrahiert.
 
@@ -140,12 +143,13 @@ Ein semantisches Element kann eines der folgenden Elemente sein:
 
 \begin{itemize}
 \item{Zahl}
-\item{Bruch \footnote{Wird anders als Zahlen gehandhabt um die Genauigkeit zu behalten.}}
+\item{Bruch\footnote{Wird anders als Zahlen gehandhabt um die Genauigkeit zu behalten.}}
 \item{String}
 \item{Liste}
 \end{itemize}
 
-Wie die einzelnen weiterverarbeitet werden, wird durch den Nutzer gesteuert.
+Wie die einzelnen Elemente weiterverarbeitet werden,
+wird durch den Nutzer gesteuert.
 Es werden aber bereits Lisp-typische Verarbeitungsmethoden angeboten.
 Zum Beispiel die Verarbeitung einer Liste als Funktionsaufruf.
 

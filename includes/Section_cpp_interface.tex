@@ -1,12 +1,13 @@
 \section{Das C++ Interface}
 \label{sec:cxx_interface}
 
-\projectname{} ermöglicht eine sehr einfache Integration des Lisp-Interpreters in bestehende C++-Projekte. Sowohl Objekte als auch Funktionen können sehr einfach der Lisp-Seite bekannt gemacht werden.
+\projectname{} ermöglicht eine sehr einfache Integration des Lispinterpreters in bestehende C++-Projekte. Sowohl Objekte als auch Funktionen können sehr einfach der Lispseite bekannt gemacht werden.
 
 \subsection{C++ Funktionen an \projectname{} übergeben}
 \label{sec:cxx_function_interface}
 
-Jede Funktion, die an \projectname{} übergeben werden soll muss als Methode einer von !object! abgeleiteten Klasse realisiert werden. Der !operator()! wird dabei überschrieben; als Argumente bekommt die Methode eine Referenz auf die aktuelle Umgebung\footnote{Näheres in Abschnitt \ref{sec:environment}.} sowie eine Liste übergebener Parameter. Diese sind noch nicht evaluiert, um beispielsweise die Implementierung einer if-Funktion zu ermöglichen. Die Liste selber ist Lisptypisch eine Verkettung von !cons_cell!s. 
+Jede Funktion, die an \projectname{} übergeben werden soll muss als Methode einer von !object! abgeleiteten Klasse realisiert werden. Der !operator()! wird dabei überschrieben; als Argumente bekommt die Methode eine Referenz auf die aktuelle Umgebung\footnote{Näheres in Abschnitt \ref{sec:environment}.} sowie eine Liste übergebener Parameter. Diese sind noch nicht evaluiert, um beispielsweise die Implementierung einer if-Funktion zu ermöglichen. Die Liste selber ist --- lisptypisch ---
+eine Verkettung von !cons_cell!s. 
 \begin{figure}[htbp]
 \centering
 \captionabove{Eigene Funktionen von object ableiten}
@@ -71,8 +72,15 @@ _global_env.get_symbol("/")->set_function(
     object_ptr_t(new arith_op_form<std::divides, '/'>()));
 \end{lstlisting}
 
-\subsection{C++ Objekte an \projectname{} übergeben}
+\subsection{C++-Objekte an \projectname{} übergeben}
 \label{sec:cxx_object_interface}
 
-C++ Objekte können auf ebenso einfache Weise an die Lispseite übergeben werden, wie Funktionen. Die entsprechenden Klassen müssen nur von !object! abgeleitet werden. Erzeugt werden können die Objekte in übergebenen Funktionen um als Rückgabewert auf Lispseite weiterverwendet zu werden. Die Zerstörung der Objekte übernimmt der Garbage-Collector\footnote{Siehe Abschnitt \ref{sec:shared_ptr}.}. Werden eigene Objekte an Lispfunktionen übergeben, findet wie bereits erwähnt keine automatische Typprüfung statt. Der Typ eines Objekts kann jedoch jeweils mittels des !typeid! Operators bestimmt werden.
+C++-Objekte können auf ebenso einfache Weise an die Lispseite übergeben werden wie Funktionen. Die entsprechenden Klassen müssen nur von !object! abgeleitet werden. Erzeugt werden können die Objekte in übergebenen Funktionen um als Rückgabewert auf Lispseite weiterverwendet zu werden. Die Zerstörung der Objekte übernimmt der Garbage Collector (Abschnitt \ref{sec:shared_ptr}). Werden eigene Objekte an Lispfunktionen übergeben, findet wie bereits erwähnt keine automatische Typprüfung statt. Der Typ eines Objekts kann jedoch jeweils mittels des !typeid! Operators bestimmt werden.
 %Hier noch ein Beispiel oder so?!
+
+\subsection{Liste unterstützter Formen}
+\begin{itemize}
+\item !lambda!: Form zum Erstellen anonymer Funktionen.
+\item !if!: Verzweigung.
+\item !or!: 
+\end{itemize}

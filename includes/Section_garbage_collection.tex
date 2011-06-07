@@ -9,7 +9,8 @@ ist.
 
 In \projectname{} wird diese mit Hilfe der, von Boost zur Verfügung
 gestellten, !shared_ptr! Klasse umgesetzt.
-Die Hauptimplementierung liegt hier in der Klasse !lisp::environment!\ref{sec:environment},
+Die Hauptimplementierung liegt hier in der Klasse
+!lisp::environment! (Abschnitt \ref{sec:environment}),
 die eine Hashtable mit allen
 im Programm verwendeten Symbolen hält.
 Symbole können auch nur über diese Klasse alloziiert werden.
@@ -23,7 +24,7 @@ um diesen dann an den Aufrufer zurückzugeben.
 Der Vorteil der genannten !shared_ptr! besteht nun darin,
 dass diese einen Referenzzähler unterhalten,
 der die Anzahl an Kopien, dieses Zeigers, im Speicher zählt.
-Erreicht dieser Zähler den Wert 0, so
+Erreicht dieser Zähler den Wert $0$, so
 wird die !lisp::environment! Klasse daüber informiert.
 Selbige wägt dann ab ob das Symbol weiterhin benötigt
 wird. Falls nicht wird es aus der gehaltenen Hashtable gelöscht.

@@ -19,7 +19,7 @@ Die Zahlenrepräsentation von \projectname{} folgt eng derer anderer Lispimpleme
 		\label{tab:typeconversion}
 	\end{threeparttable}
 \end{table}
-Intern werden Zahlen dazu durch die Klasse !number! verwaltet, die auf der Klasse AnyScalar von Timo Bingmann basiert \cite{anyscalar_online}. Alle Datentypen werden in einer !union! verwaltet, der aktuelle Typ wird durch einen Enumerator gespeichert. Die !number! Klasse übernimmt alle nötigen Typkonvertierungen sowie boolsche und arithmetische Operatoren durch zwei Templates. Der konkrete Operator wird dabei als Templateparameter übergeben. Die !C++!-Standardbibliothek bietet dazu die Klassen !std::plus!, !std::minus!, !std::multiplies! und !std::divides!. Bei Fehlern wie der Division durch $0$ wird eine !arith_error!-Exception geworfen. Listing \ref{lst:op_template} zeigt die Implementierung der arithmetischen Operatoren in verkürzter Form als Beispiel.
+Intern werden Zahlen dazu durch die Klasse !number! verwaltet, die auf der Klasse AnyScalar von Timo Bingmann basiert \cite{anyscalar_online}. Alle Datentypen werden in einer !union! verwaltet, der aktuelle Typ wird durch einen Enumerator gespeichert. Die !number! Klasse übernimmt alle nötigen Typkonvertierungen sowie boolsche und arithmetische Operatoren durch zwei Templates. Der konkrete Operator wird dabei als Templateparameter übergeben. Listing \ref{lst:op_template} zeigt dies in verkürzter Form als Beispiel. Die !C++!-Standardbibliothek bietet dazu die Klassen !std::plus!, !std::minus!, !std::multiplies! und !std::divides!. Bei Fehlern wie der Division durch $0$ wird eine !arith_error!-Exception geworfen.
 \begin{lstlisting}[caption={Arithmetische Operatoren}, label=lst:op_template]
 template <template <typename Type> class Operator,
                                    char OpName>
@@ -89,6 +89,6 @@ template number number::binary_arith_op<std::plus, '+'>
 
 Die Klasse !number! ist wie alle Lispobjekte von !object! abgeleitet; zur einfacheren und schnelleren Typprüfung überschreibt sie die Methode !is_number()!, sodass sich Zahlen leicht durch Aufruf dieser Methode erkennen lassen. Beispiele zur Verwendung der !number! Klasse und Implementierung der arithmetischen Funktionen finden sich in Abschnitt \ref{sec:cxx_function_interface}.
 
-Wie bereits in \ref{sec:shared_ptr} beschrieben werden sämtliche Objekte durch !smart_ptr! verwaltet. Um eine bequemere Verwendung auf diese Weise referenzierter !number!-Objekte zu ermöglichen existiert der !typedef! !number_ptr_t! --- eine Spezialisierung von !smart_ptr!.
+Wie bereits in \ref{sec:shared_ptr} beschrieben werden sämtliche Objekte durch !shared_ptr! verwaltet. Um eine bequemere Verwendung auf diese Weise referenzierter !number!-Objekte zu ermöglichen existiert der !typedef! !number_ptr_t! --- eine Spezialisierung von !shared_ptr!.
 
 Im Quelltext werden Zahlen als Ganzzahl, Fließkommazahl und Bruch erkannt. Der Tokenizer erzeugt !number!-Objekte und passt den Typ entsprechend an. Auf die genaue Funktionsweise geht Abschnitt \ref{sec:tokenizer} ein.
