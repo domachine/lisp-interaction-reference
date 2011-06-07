@@ -14,7 +14,7 @@ Das Projekt, sowie die jeweils aktuellste Version dieser Referenz stehen auf git
 \subsection{Allgemeiner Aufbau}
 \label{sec:environment}
 
-\projectname{} implementiert keinen festen Lispdialekt. Die Zahlenrepräsentation ist mit Ausnahme komplexer Zahlen an Common Lisp angelehnt (\cite[S. 143ff]{graham_ansi_1995}, Abschnitt \ref{sec:numbers}), setzt aber im Gegensatz dazu, wie einige ältere Lispimplementierungen oder Emacs, dynamische Bindung ein, sucht also globale Variablen in der zum Aufrufzeitpunkt umgebenden Umgebung anstatt in der zum Deklarationszaitpunkt umgebenden (\cite[36, 63]{wilhelm_uebersetzerbau_2007}\cite[112]{graham_ansi_1995}). Listing \ref{lst:bindung} veranschaulicht dynamische und statische Bindung anhand eines Beispiels.
+\projectname{} implementiert keinen festen Lispdialekt. Die Zahlenrepräsentation ist mit Ausnahme komplexer Zahlen an Common Lisp angelehnt (\cite[S. 143ff]{graham_ansi_1995}, Abschnitt \ref{sec:numbers}), setzt aber im Gegensatz dazu, wie einige ältere Lispimplementierungen oder Emacs, dynamische Bindung ein, sucht also globale Variablen in der zum Aufrufzeitpunkt umgebenden Umgebung anstatt in der zum Deklarationszeitpunkt umgebenden (\cite[36, 63]{wilhelm_uebersetzerbau_2007}\cite[112]{graham_ansi_1995}). Listing \ref{lst:bindung} veranschaulicht dynamische und statische Bindung anhand eines Beispiels.
 %habs jetzt einfach mal hier kurz reingeschrieben, vielleicht passts ja woanders besser.
 
 \begin{lstlisting}[caption={dynamische Bindung}, label=lst:bindung, language=Lisp]
