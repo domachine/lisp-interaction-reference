@@ -1,0 +1,14 @@
+\section{Liste unterstützter Formen}
+\begin{itemize}
+\item !(+|-|*|/ !\emph{Zahl*}!)!: Führt die entsprechende arithmetische Operation auf den \emph{Zahlen} aus. Bei Fehlern wie der Division durch $0$ wird eine !arith_error!-Exception geworfen.
+\item !(and !\emph{Ausdruck*}!)!:  Evaluiert die \emph{Ausdrücke} bis !nil! auftritt und liefert als Ergebnis !nil!, oder liefert das Ergebnis des letzten Ausdrucks zurück.
+\item !(defun !\emph{Name Parameter Rumpf}!)!: \\ Äquivalent zu !(setq !\emph{Name}! (lambda !\emph{Parameter Rumpf}!))!.
+\item !(equal !\emph{Ausdruck Ausdruck}!)!: Liefert !t! wenn beide Ausdrücke das selbe Objekt zurückliefern, sonst !nil!.
+\item !(fset !!)!: ???
+\item !(if !\emph{Bedingung Then-Zweig Else-Zweig}!)!: Verzweigung, die die Bedingung evaluiert und bei nicht !nil! den \emph{then-Zweig} ausführt, sonst den \emph{else-Zweig}.
+\item !(lambda !\emph{Parameter Rumpf}!)!: Erstellt eine anonyme Funktion mit den angegebenen \emph{Parametern} und \emph{Rumpf}.
+\item !(or !\emph{Ausdruck*}!)!: Evaluiert die \emph{Ausdrücke} bis nicht !nil! auftritt und liefert das Ergebnis des letzten Ausdrucks, oder liefert !nil! zurück.
+\item !(print !\emph{Ausdruck*}!)!: Evaluiert alle \emph{Ausdrücke} und schreibt die Ergebnisse gefolgt von !'\n'! in lesbarer Form nach !std::cerr!.
+\item !(setf !\emph{Ausdruck Wert}!)!: Evaluiert den \emph{Ausdruck} und weist dem resultierenden Symbol den \emph{Wert} zu.
+\item !(setq !\emph{Symbol Wert}!)!: Bindet den \emph{Wert} an das \emph{Symbol}.
+\end{itemize}

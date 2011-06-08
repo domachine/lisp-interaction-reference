@@ -21,8 +21,7 @@ Die Zahlenrepräsentation von \projectname{} folgt eng derer anderer Lispimpleme
 \end{table}
 Intern werden Zahlen dazu durch die Klasse !number! verwaltet, die auf der Klasse AnyScalar von Timo Bingmann basiert \cite{anyscalar_online}. Alle Datentypen werden in einer !union! verwaltet, der aktuelle Typ wird durch einen Enumerator gespeichert. Die !number! Klasse übernimmt alle nötigen Typkonvertierungen sowie boolsche und arithmetische Operatoren durch zwei Templates. Der konkrete Operator wird dabei als Templateparameter übergeben. Listing \ref{lst:op_template} zeigt dies in verkürzter Form als Beispiel. Die !C++!-Standardbibliothek bietet dazu die Klassen !std::plus!, !std::minus!, !std::multiplies! und !std::divides!. Bei Fehlern wie der Division durch $0$ wird eine !arith_error!-Exception geworfen.
 \begin{lstlisting}[caption={Arithmetische Operatoren}, label=lst:op_template]
-template <template <typename Type> class Operator,
-                                   char OpName>
+template <template <typename Type> class Operator, char OpName>
 number number::binary_arith_op(const number &b) const
 {
     switch(atype)
@@ -43,8 +42,7 @@ number number::binary_arith_op(const number &b) const
                     number a2(*this);
                     a2.convert_type(ATTRTYPE_FRACTION);
                     Operator<fraction> op2;
-                    return number(op2(a2.val._fraction,
-                                      b2.val._fraction));
+                    return number(op2(a2.val._fraction, b2.val._fraction));
                 }
             }
             return number( op(val._long, b.val._long) );
@@ -52,8 +50,7 @@ number number::binary_arith_op(const number &b) const
         case ATTRTYPE_DOUBLE:
         {
             Operator<double> op;
-            return number( op(static_cast<double>(val._long),
-                           b.val._double) )
+            return number( op(static_cast<double>(val._long), b.val._double) )
         }
 
         case ATTRTYPE_FRACTION:
@@ -63,28 +60,23 @@ number number::binary_arith_op(const number &b) const
                 throw arith_error("division by zero");
             number a(*this);
             a.convert_type(ATTRTYPE_FRACTION);
-            return number(op(a.val._fraction,
-                             b.val._fraction));
+            return number(op(a.val._fraction, b.val._fraction));
         }
         }
         break;
     }
 
-    //the same for atype == ATTRTYPE_DOUBLE
-    //         and atype == ATTRTYPE_FRACTION
+    //the same for atype == ATTRTYPE_DOUBLE and atype == ATTRTYPE_FRACTION
 
     }
     assert(0);
 }
 
-// Force instantiation of binary_op for the
-// four arithmetic operators
+// Force instantiation of binary_op for the four arithmetic operators
 
-/// Forced instantiation of binary_arith_op
-//  for number::operator+()
+/// Forced instantiation of binary_arith_op for number::operator+()
 
-template number number::binary_arith_op<std::plus, '+'>
-    (const number &b) const;
+template number number::binary_arith_op<std::plus, '+'>(const number &b) const;
 \end{lstlisting}
 
 Die Klasse !number! ist wie alle Lispobjekte von !object! abgeleitet; zur einfacheren und schnelleren Typprüfung überschreibt sie die Methode !is_number()!, sodass sich Zahlen leicht durch Aufruf dieser Methode erkennen lassen. Beispiele zur Verwendung der !number! Klasse und Implementierung der arithmetischen Funktionen finden sich in Abschnitt \ref{sec:cxx_function_interface}.
